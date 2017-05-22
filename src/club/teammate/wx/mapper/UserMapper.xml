@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="club.teammate.wx.mapper.UserMapper">
+
+    <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        insert into user
+        (openid, real_name, mark, phone)
+        values
+        (#{openid}, #{realName}, #{mark}, #{phone})
+    </insert>
+
+    <update id="update" parameterType="User">
+        update user
+        set real_name=#{realName},
+            mark=#{mark},
+            phone=#{phone}
+        where openid=#{openid}
+    </update>
+
+    <select id="selectById" resultType="User" parameterType="int">
+        select *
+        from user
+        where id=#{id}
+    </select>
+
+    <select id="selectByOpenid" resultType="User" parameterType="String">
+        select *
+        from user
+        where openid=#{openid}
+    </select>
+</mapper>

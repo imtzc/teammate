@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="club.teammate.wx.mapper.ActiveLogMapper">
+    <insert id="insert" parameterType="ActiveLog" useGeneratedKeys="true" keyProperty="id">
+        insert into active_log
+        (user_id, active_id, datetime)
+        VALUES
+        (#{userId}, #{activeId}, #{datetime})
+    </insert>
+
+    <select id="selectCount" parameterType="int" resultType="int">
+        select count(1)
+        from active_log
+        where user_id=#{userId}
+    </select>
+
+    <select id="checkJoinTodayActive" parameterType="int" resultType="int">
+        select count(1)
+        from active_log
+        where user_id=#{userId}
+        and active_id=(
+            select id
+            from active
+            where active_date=DATE_FORMAT(now(), '%Y-%m-%d')
+        )
+    </select>
+</mapper>
