@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<title>铁马堂周末活动报名</title>
+<link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css">
+<link rel="shortcut icon" href="/image/web.ico"/>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        height: 100%;
+    }
+
+    #xieyi {
+        padding: 10px;
+    }
+
+    #xieyi p {
+        margin-bottom: 10px;
+    }
+
+    #xieyi p span {
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+<div id="xieyi">
+    <p>
+        <span>第一条：</span>活动参加者应本着自由结合、自愿参加、风险自担、责任自负的原则参加。
+    </p>
+    <p>
+        <span>第二条：</span>参加者本人应身体健康，有团队精神及顽强的意志力，听从领队指挥，不搞个人主义。
+    </p>
+    <p>
+        <span>第三条：</span>活动中的全部费用实行ＡＡ制原则，参加者需承担各自的活动费用，所有公共费用一律平摊。半途加入或退出者也需自觉承担相应部份的费用。
+    </p>
+    <p>
+        <span>第四条：</span>热爱大自然是我们的本性，保护自然是我们的职责，用我们力所能及的点点滴滴去保护好生态环境是最实际的行动，当你走出户外时请记住：“除了脚印什么也别留下，除了照片什么也别带走”。
+    </p>
+    <div style="color: red; font-size: 0.8em;">
+        * 本协议书为强制性必签文本，签字人必须签写俱乐部代号以及本人真实姓名和手机号码。
+    </div>
+</div>
+
+<div id="loading">
+    <div class="weui-mask_transparent weui-mask"></div>
+    <div class="weui-toast">
+        <i class="weui-loading weui-icon_toast"></i>
+        <p class="weui-toast__content">数据加载中</p>
+    </div>
+</div>
+
+<div class="weui-cells weui-cells_form">
+    <div id="info" class="weui-cell">
+        <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+            <div class="weui-media-box__hd">
+                <img sid="headimg" class="weui-media-box__thumb" src="">
+            </div>
+            <div class="weui-media-box__bd">
+                <h4 sid="nickname" class="weui-media-box__title">铁马堂</h4>
+                <p class="weui-media-box__desc">
+                    <span sid="sex">男</span>
+                    <span sid="address">中国-山东-济南</span>
+                    <br>
+                    <span>
+                        <span sid="subscribe_time">2017-01-01</span>加入铁马堂单车俱乐部
+                    </span>
+                </p>
+            </div>
+        </a>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">代号</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input error" id="form_remark" type="text" placeholder="请输入您的俱乐部代号">
+        </div>
+        <div class="weui-cell__ft">
+            <i class="weui-icon-warn"></i>
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input error" id="form_name" type="text" placeholder="请输入您的真实姓名">
+        </div>
+        <div class="weui-cell__ft">
+            <i class="weui-icon-warn"></i>
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">手机</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" id="form_phone" type="number" pattern="[0-9]*" placeholder="请输入您的手机号码">
+        </div>
+        <div class="weui-cell__ft">
+            <i class="weui-icon-warn"></i>
+        </div>
+    </div>
+</div>
+
+<div style="padding: 10px;">
+    <a href="javascript:void(0);" id="baoming" class="weui-btn weui-btn_primary">
+        同意以上条款&报名
+    </a>
+</div>
+
+<div id="inform" style="display: none;">
+    <div class="weui-mask"></div>
+    <div class="weui-dialog">
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title">报名成功</strong></div>
+        <div class="weui-dialog__bd">
+            你已经累计参加<span sid="active_time" style="color: green;">1</span>次活动, <br>
+            <!--连续参加<span sid="ongoing_active_time" style="color: green;">0</span>次活动。</div>-->
+            <div class="weui-dialog__ft">
+                <a href="javascript:;" sid="ok" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//zb.weixin.qq.com/nearbycgi/addcontact/BeaconAddContactJsBridge.js"></script>
+<script>
+
+    $(function () {
+
+        var userInfo = {};
+
+        BeaconAddContactJsBridge.ready(function () {
+            //判断是否关注
+            BeaconAddContactJsBridge.invoke('checkAddContactStatus', {type: 0}, function (apiResult) {
+                if (apiResult.err_code == 0) {
+                    var status = apiResult.data;
+                    if (status == 1) {
+
+                        checkTodayActive();
+                    } else {
+                        //跳转到关注页
+                        BeaconAddContactJsBridge.invoke('jumpAddContact', {type: 0});
+                    }
+                } else {
+                    alert(apiResult.err_msg);
+                }
+            });
+        });
+
+        function checkTodayActive() {
+
+            var currentHour = new Date().getHours();
+
+            if(currentHour >= 7 && currentHour <= 8){
+
+                $.get("https://wx.teammate.club/active/today",
+                    {},
+                    function (active) {
+                        if(active.id)
+                            loadUserInfo();
+                        else
+                            BeaconAddContactJsBridge.invoke('jumpAddContact', {type: 0});
+                    }, "json"
+                );
+            } else {
+                
+                BeaconAddContactJsBridge.invoke('jumpAddContact', {type: 0});
+            }
+        }
+
+        function loadUserInfo() {
+
+            // 获取用户信息
+            $.get("https://wx.teammate.club/wxuser/info", {
+                'ticket': GetURLParameter("ticket")
+            }, function (userInfo) {
+                fillInfo(userInfo);
+                fillInput(userInfo.openid).done(function () {
+                    $("#loading").hide();
+                });
+            }, "json");
+        }
+
+        var $remark = $("#form_remark");
+        var $name = $("#form_name");
+        var $phone = $("#form_phone");
+
+        $("#baoming").click(function () {
+
+            if ($(this).hasClass("weui-btn_disabled"))
+                return false;
+
+            var baoming = true;
+            $remark.add($name).add($phone).each(function () {
+
+                var cell = $(this).parent().parent();
+                if (!$(this).val()) {
+                    cell.addClass("weui-cell_warn");
+                    baoming = false;
+                } else {
+                    cell.removeClass("weui-cell_warn");
+                }
+            });
+
+            if (baoming) {
+
+                $("#loading").show();
+
+                userInfo.mark = $remark.val();
+                userInfo.realName = $name.val();
+                userInfo.phone = $phone.val();
+                $.post(
+                    "https://wx.teammate.club/user/create",
+                    userInfo,
+                    function (activeTime) {
+
+                        hasJoin();
+
+                        $("#loading").hide();
+                        $("#inform").show().find("[sid=active_time]").html(activeTime);
+                    }, 'json'
+                );
+            }
+        });
+
+        $("#inform").find("[sid=ok]").click(function () {
+            $("#inform").hide();
+        });
+
+        function fillInfo(info) {
+
+            userInfo.openid = info.openid;
+
+            var $info = $("#info");
+            $info.find("[sid=headimg]").attr("src", info.headimgurl);
+            $info.find("[sid=nickname]").html(info.nickname);
+//            $info.find("[sid=remark]").html(info.remark);
+            $info.find("[sid=subscribe_time]").html(new Date(info.subscribe_time * 1000).format("yyyy年MM月dd日"));
+            $info.find("[sid=sex]").html(info.sex == 1 ? '男' : '女');
+            $info.find("[sid=address]").html(info.country + "-" + info.province + "-" + info.city);
+        }
+
+        function fillInput(openid) {
+
+            var deferred = $.Deferred();
+
+            $.get(
+                "https://wx.teammate.club/user/get_by_openid",
+                {
+                    openid: openid
+                }, function (user) {
+
+                    $remark.val(user.mark);
+                    $name.val(user.realName);
+                    $phone.val(user.phone);
+
+                    if(user.hasJoin){
+
+                        hasJoin();
+                    }
+
+                    deferred.resolve();
+                }, "json"
+            );
+
+            return deferred.promise();
+        }
+
+        function hasJoin(){
+
+            $("#baoming").html("今日活动已报名").addClass("weui-btn_disabled").find("i").hide();
+            $remark.prop("disabled", true);
+            $name.prop("disabled", true);
+            $phone.prop("disabled", true);
+        }
+
+        /**
+         * 获取url参数
+         * @param name
+         * @returns {null}
+         * @constructor
+         */
+        function GetURLParameter(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null)return unescape(r[2]);
+            return null;
+        }
+
+        Date.prototype.format = function (format) {
+            var date = {
+                "M+": this.getMonth() + 1,
+                "d+": this.getDate(),
+                "h+": this.getHours(),
+                "m+": this.getMinutes(),
+                "s+": this.getSeconds(),
+                "q+": Math.floor((this.getMonth() + 3) / 3),
+                "S+": this.getMilliseconds()
+            };
+            if (/(y+)/i.test(format)) {
+                format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+            }
+            for (var k in date) {
+                if (new RegExp("(" + k + ")").test(format)) {
+                    format = format.replace(RegExp.$1, RegExp.$1.length == 1
+                        ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+                }
+            }
+            return format;
+        }
+
+    });
+</script>
+</body>
+</html>
